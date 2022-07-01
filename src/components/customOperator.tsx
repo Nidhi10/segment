@@ -14,7 +14,7 @@ function CustomOperator(props: { operator: string, onOperatorChange: stateUpdate
     // setOperator(e.target.value)
     console.log("selected", operator)
   }
-  
+
   const operatorList = {
     label: "Operator",
     value: operator,

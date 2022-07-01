@@ -27,6 +27,7 @@ function Value(props: { valueArray: ValueInput, onValueChange: stateUpdateCallba
     arr.splice(index, 1)
     onValueChange(arr)
   }
+
   return (
     <Grid item xs={12} sm={4}>
       <Grid container spacing={2}>

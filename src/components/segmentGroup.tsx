@@ -1,50 +1,35 @@
-import React, { useCallback } from 'react';
+import React, { Fragment, useCallback } from 'react';
 import Segment from './segment';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import IProps from '../interfaces/IProps'
-import SegmentInput from '../interfaces/segmentInput';
+import DeleteIcon from '@mui/icons-material/Delete';
+import useStore from '../store/GroupListStore'
 
-function SegmentGroup(props: IProps) {
-  const { index, curGroupList, onSegmentGroupChange } = props
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const emptySegment = { id: 0, attribute: '', operator: '', value: [] };
-
-  const handleUpdateSegment = useCallback((segmentIndex: number, updatedSegment: SegmentInput) => {
-    let segmentGroup = [...curGroupList][index]
-    segmentGroup[segmentIndex] = updatedSegment
-    onSegmentGroupChange(index, segmentGroup)
-  }, [curGroupList, index, onSegmentGroupChange])
-
-  const handleAddSegment = useCallback(() => {
-    onSegmentGroupChange(index, [...curGroupList[index], emptySegment])
-  },[curGroupList, emptySegment, index, onSegmentGroupChange])
-
-  const handleDeleteSegment = useCallback((segmentIndex: number) => {
-    let segmentGroup = [...curGroupList][index]
-    segmentGroup.splice(segmentIndex,1)
-    onSegmentGroupChange(index, segmentGroup)
-  }, [curGroupList, index, onSegmentGroupChange])
-
+function SegmentGroup(props: { index: number }) {
+  const { index } = props
+  const { curGroupListInput, addSegment, deleteSegment } = useStore();
   const renderSegments = useCallback(() => {
     var segments = []
-    for (let i = 0; i < curGroupList[index].length; i++) {
+    for (let i = 0; i < curGroupListInput[index].length; i++) {
       segments.push(
-        <Grid key={i} item xs={12} sm={8}>
-          <Segment key={i} index={i} curSegmentGroup={curGroupList[index]} onSegmentChange={handleUpdateSegment} />
-          {(i !== 0) &&
-             <Button variant="contained" sx={{ mb: 2 }} onClick={() => handleDeleteSegment(i)}> Delete Segment</Button>}
-        </Grid>
+        <Fragment key={i}>
+          <Grid item xs={12} sm={8}>
+            <Segment segmentIndex={i} segmentGroupIndex={index} />
+          </Grid>
+          <Grid item xs={12} sm={2}>
+            <Button variant="outlined" color="secondary" sx={{ mb: 2 }} startIcon={<DeleteIcon />} onClick={() => deleteSegment(index, i)}> Segment</Button>
+          </Grid>
+        </Fragment>
       )
     }
-    return segments
-  }, [curGroupList, index, handleUpdateSegment, handleDeleteSegment])
+    return segments 
+  }, [curGroupListInput, index, deleteSegment])
 
   return (
-    <Grid container spacing={4} borderBottom={1} sx={{ mt: 3, mb: 2 }}>
+    <Grid container spacing={4} sx={{ mt: 3, mb: 2 }}>
       {renderSegments()}
-      <Grid item xs={12} sm={4}>
-        <Button variant="contained" sx={{ mb: 2 }} onClick={handleAddSegment}> Add Segment</Button>
+      <Grid item xs={12} sm={2}>
+        <Button variant="contained" sx={{ mb: 2 }} onClick={() => addSegment(index)}> Add Segment</Button>
       </Grid>
     </Grid>
   )

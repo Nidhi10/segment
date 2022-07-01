@@ -12,7 +12,6 @@ function Attribute(props: { attribute: string, onAttributeChange: stateUpdateCal
   const handleAttribute = (e: React.ChangeEvent<HTMLInputElement>) => {
     onAttributeChange(e.target.value)
   }
-  
   const attributeList = {
     label: "Attribute",
     value: attribute,
